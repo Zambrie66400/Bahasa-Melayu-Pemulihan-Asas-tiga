@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="ms">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bahasa Melayu Pemulihan Asas</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .student-info {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 1.5rem;
+            background: white;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .instruction {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .syllable-display {
+            font-size: 5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            min-height: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .syllable-display.pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1.5rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            top: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 rgba(0, 0, 0, 0.2), 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+
+        .progress-section {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .progress-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .syllable-item {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .syllable-item.completed {
+            animation: completePop 0.5s ease-out;
+        }
+
+        @keyframes completePop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2) rotate(5deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .syllable-item.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: checkmarkAppear 0.3s ease-out;
+        }
+
+        @keyframes checkmarkAppear {
+            from {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .stats {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration {
+            font-size: 4rem;
+            text-align: center;
+            animation: celebration 1s ease-in-out;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: celebration 1s ease-in-out, gradientShift 3s ease infinite;
+        }
+
+        @keyframes celebration {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .draggable-syllable {
+            padding: 1.2rem 1.8rem;
+            background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+            border-radius: 1rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: move;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            color: #1E293B;
+            user-select: none;
+        }
+
+        .draggable-syllable:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 0 rgba(0, 0, 0, 0.2), 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .draggable-syllable.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .drop-zone-active {
+            background: rgba(118, 75, 162, 0.15) !important;
+            border-color: #48dbfb !important;
+            transform: scale(1.02);
+        }
+
+        .syllable-in-zone {
+            background: linear-gradient(135deg, #48dbfb 0%, #54a0ff 100%);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .correct-answer {
+            animation: successShake 0.6s ease;
+        }
+
+        @keyframes successShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 640px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 1.5rem;
+            }
+
+            .syllable-display {
+                font-size: 3rem;
+                min-height: 4rem;
+            }
+
+            .celebration {
+                font-size: 2.5rem;
+            }
+
+            .timer-display {
+                font-size: 2rem;
+            }
+
+            .progress-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+
+            .btn {
+                padding: 1rem 1.8rem;
+            }
+
+            .draggable-syllable {
+                padding: 1rem 1.5rem;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-container">
+   <div class="header">
+    <div class="main-title" id="mainTitle">
+     Bahasa Melayu Pemulihan Asas 3
+    </div>
+    <div class="student-info" id="studentName">
+     2025@ZAMBRIE BIN MOHAMMED
+    </div>
+    <div class="student-info" id="schoolName">
+     SK BUKIT CERMIN
+    </div>
+   </div><!-- Activity Selection Card -->
+   <div class="card" id="selectionCard">
+    <div class="instruction">
+     Pilih aktiviti yang anda ingin lakukan:
+    </div>
+    <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;"><button class="btn" id="selectActivity1Btn" style="font-size: 1.3rem; padding: 1.5rem 3rem;"> 📖 Aktiviti 1<br><span style="font-size: 0.8rem; font-weight: 500;">Baca Suku Kata</span> </button> <button class="btn" id="selectActivity2Btn" style="font-size: 1.3rem; padding: 1.5rem 3rem;"> 🧩 Aktiviti 2<br><span style="font-size: 0.8rem; font-weight: 500;">Susun Suku Kata (Berpanduan)</span> </button> <button class="btn" id="selectActivity3Btn" style="font-size: 1.3rem; padding: 1.5rem 3rem;"> 🎯 Aktiviti 3<br><span style="font-size: 0.8rem; font-weight: 500;">Susun Suku Kata (Tanpa Panduan)</span> </button>
+    </div>
+   </div><!-- Activity 1 Card -->
+   <div class="card" id="practiceCard" style="display: none;">
+    <div class="instruction" id="instructionText">
+     Baca suku kata dengan lancar dan tandakan jika berjaya membaca dengan baik
+    </div>
+    <div class="syllable-display" id="syllableDisplay">
+     Klik Mula
+    </div>
+    <div class="timer-display" id="timerDisplay">
+     00:00
+    </div>
+    <div class="controls"><button class="btn" id="startBtn">Mula</button> <button class="btn" id="markCompleteBtn" disabled>Tandakan Selesai ✓</button> <button class="btn" id="backToSelectionBtn1">Kembali</button>
+    </div>
+   </div>
+   <div class="progress-section">
+    <div class="card">
+     <div class="progress-header">
+      Kemajuan Bacaan
+     </div>
+     <div class="progress-grid" id="progressGrid"></div>
+     <div class="stats" id="statsDisplay">
+      0 / 20 selesai
+     </div>
+    </div>
+   </div><!-- Drag and Drop Activity -->
+   <div class="card" id="dragDropCard" style="display: none; max-width: 1000px;">
+    <div class="instruction">
+     Seret dan lepaskan suku kata untuk membentuk perkataan yang betul!
+    </div>
+    <div id="wordToBuild" style="font-size: 2.5rem; font-weight: bold; text-align: center; margin: 1.5rem 0; color: #764ba2;">
+     Susun: <span id="targetWord"></span>
+    </div>
+    <div id="dropZoneContainer" style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;"><!-- Individual drop boxes will be inserted here -->
+    </div>
+    <div id="syllableBank" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; min-height: 100px;"><!-- Syllables will be inserted here -->
+    </div>
+    <div style="text-align: center; margin-top: 2rem;"><button class="btn" id="checkAnswerBtn" disabled>Semak Jawapan</button> <button class="btn" id="resetDragBtn">Set Semula</button> <button class="btn" id="backToSelectionBtn2">Kembali</button>
+    </div>
+    <div id="dragDropProgress" style="margin-top: 2rem;">
+     <div style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">
+      Kemajuan: <span id="dragDropStats">0 / 14 selesai</span>
+     </div>
+    </div>
+   </div><!-- Drag and Drop Activity 3 (No Guidance) -->
+   <div class="card" id="dragDropCard3" style="display: none; max-width: 1000px;">
+    <div class="instruction">
+     Susun suku kata dengan betul tanpa panduan perkataan!
+    </div>
+    <div id="wordHint3" style="font-size: 1.5rem; font-weight: 600; text-align: center; margin: 1rem 0; color: #764ba2;">
+     🤔 Cuba susun suku kata ini menjadi perkataan yang betul
+    </div>
+    <div id="dropZoneContainer3" style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;"><!-- Individual drop boxes will be inserted here -->
+    </div>
+    <div id="syllableBank3" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; min-height: 100px;"><!-- Syllables will be inserted here -->
+    </div>
+    <div style="text-align: center; margin-top: 2rem;"><button class="btn" id="checkAnswerBtn3" disabled>Semak Jawapan</button> <button class="btn" id="resetDragBtn3">Set Semula</button> <button class="btn" id="backToSelectionBtn3">Kembali</button>
+    </div>
+    <div id="dragDropProgress3" style="margin-top: 2rem;">
+     <div style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">
+      Kemajuan: <span id="dragDropStats3">0 / 14 selesai</span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+        const syllables = ["nak", "lar", "wan", "bah", "sat", "pah", "ram", "kan", "yam", "mas", 
+                          "lem", "tem", "zek", "les", "ter", "cek", "rek", "net", "bel", "ber"];
+        
+        // Words for drag and drop activity
+        const targetWords = [
+            {word: "ayam", syllables: ["a", "yam"]},
+            {word: "ular", syllables: ["u", "lar"]},
+            {word: "awan", syllables: ["a", "wan"]},
+            {word: "makan", syllables: ["ma", "kan"]},
+            {word: "sampah", syllables: ["sam", "pah"]},
+            {word: "kemas", syllables: ["ke", "mas"]},
+            {word: "lebah", syllables: ["le", "bah"]},
+            {word: "bersih", syllables: ["ber", "sih"]},
+            {word: "lembu", syllables: ["lem", "bu"]},
+            {word: "kocek", syllables: ["ko", "cek"]},
+            {word: "mozek", syllables: ["mo", "zek"]},
+            {word: "cerek", syllables: ["ce", "rek"]},
+            {word: "tempah", syllables: ["tem", "pah"]},
+            {word: "bonet", syllables: ["bo", "net"]}
+        ];
+        
+        let currentIndex = 0;
+        let timerInterval = null;
+        let seconds = 0;
+        let completedRecords = [];
+        let isInitialized = false;
+        
+        // Drag and drop variables
+        let currentWordIndex = 0;
+        let shuffledWords = [];
+        let droppedSyllables = [];
+        let dragDropCompleted = [];
+        
+        // Activity 3 variables
+        let currentWordIndex3 = 0;
+        let shuffledWords3 = [];
+        let droppedSyllables3 = [];
+        let dragDropCompleted3 = [];
+
+        const defaultConfig = {
+            background_color: "#E0F2FE",
+            card_color: "#FFFFFF",
+            text_color: "#1E293B",
+            primary_button_color: "#3B82F6",
+            success_button_color: "#10B981",
+            syllable_color: "#DC2626",
+            completed_color: "#D1FAE5",
+            incomplete_color: "#FEF3C7",
+            font_family: "Segoe UI",
+            font_size: 16,
+            main_title: "Bahasa Melayu Pemulihan Asas 3",
+            student_name: "2025@ZAMBRIE BIN MOHAMMED",
+            school_name: "SK BUKIT CERMIN",
+            instruction_text: "Baca suku kata dengan lancar dan tandakan jika berjaya membaca dengan baik",
+            start_button_text: "Mula",
+            mark_complete_text: "Tandakan Selesai ✓",
+            next_button_text: "Seterusnya →"
+        };
+
+        const dataHandler = {
+            onDataChanged(data) {
+                completedRecords = data;
+                updateProgressDisplay();
+            }
+        };
+
+        function adjustBrightness(hex, percent) {
+            // Convert hex to RGB
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.max(0, Math.min(255, (num >> 16) + percent));
+            const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + percent));
+            const b = Math.max(0, Math.min(255, (num & 0x0000FF) + percent));
+            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+        }
+
+        async function onConfigChange(config) {
+            const baseFont = config.font_family || defaultConfig.font_family;
+            const baseFontSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
+
+            document.body.style.fontFamily = `${baseFont}, ${baseFontStack}`;
+            
+            const appContainer = document.querySelector('.app-container');
+            const bgColor = config.background_color || defaultConfig.background_color;
+            appContainer.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${adjustBrightness(bgColor, -20)} 100%)`;
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.backgroundColor = config.card_color || defaultConfig.card_color;
+            });
+
+            const textElements = ['.main-title', '.student-info', '.instruction', '.progress-header', '.stats'];
+            textElements.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.color = config.text_color || defaultConfig.text_color;
+                });
+            });
+
+            document.getElementById('mainTitle').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('mainTitle').style.fontSize = `${baseFontSize * 2}px`;
+            
+            document.getElementById('studentName').textContent = config.student_name || defaultConfig.student_name;
+            document.getElementById('studentName').style.fontSize = `${baseFontSize * 1.1}px`;
+            
+            document.getElementById('schoolName').textContent = config.school_name || defaultConfig.school_name;
+            document.getElementById('schoolName').style.fontSize = `${baseFontSize * 1.1}px`;
+            
+            document.getElementById('instructionText').textContent = config.instruction_text || defaultConfig.instruction_text;
+            document.getElementById('instructionText').style.fontSize = `${baseFontSize * 1.2}px`;
+
+            const syllableDisplay = document.getElementById('syllableDisplay');
+            syllableDisplay.style.color = config.syllable_color || defaultConfig.syllable_color;
+            syllableDisplay.style.fontSize = `${baseFontSize * 5}px`;
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.style.color = config.text_color || defaultConfig.text_color;
+            timerDisplay.style.fontSize = `${baseFontSize * 2.5}px`;
+
+            const startBtn = document.getElementById('startBtn');
+            startBtn.style.backgroundColor = config.primary_button_color || defaultConfig.primary_button_color;
+            startBtn.style.color = '#FFFFFF';
+            startBtn.textContent = config.start_button_text || defaultConfig.start_button_text;
+            startBtn.style.fontSize = `${baseFontSize * 1.1}px`;
+
+            const markCompleteBtn = document.getElementById('markCompleteBtn');
+            markCompleteBtn.style.backgroundColor = config.success_button_color || defaultConfig.success_button_color;
+            markCompleteBtn.style.color = '#FFFFFF';
+            markCompleteBtn.textContent = config.mark_complete_text || defaultConfig.mark_complete_text;
+            markCompleteBtn.style.fontSize = `${baseFontSize * 1.1}px`;
+
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.style.backgroundColor = config.primary_button_color || defaultConfig.primary_button_color;
+            nextBtn.style.color = '#FFFFFF';
+            nextBtn.style.fontSize = `${baseFontSize * 1.1}px`;
+
+            document.querySelector('.progress-header').style.fontSize = `${baseFontSize * 1.5}px`;
+            document.getElementById('statsDisplay').style.fontSize = `${baseFontSize * 1.2}px`;
+
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const grid = document.getElementById('progressGrid');
+            grid.innerHTML = '';
+            
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+
+            syllables.forEach(syllable => {
+                const item = document.createElement('div');
+                item.className = 'syllable-item';
+                
+                const isCompleted = completedRecords.some(record => record.syllable === syllable);
+                if (isCompleted) {
+                    item.classList.add('completed');
+                    item.style.backgroundColor = config.completed_color || defaultConfig.completed_color;
+                } else {
+                    item.style.backgroundColor = config.incomplete_color || defaultConfig.incomplete_color;
+                }
+                
+                item.style.color = config.text_color || defaultConfig.text_color;
+                item.textContent = syllable;
+                grid.appendChild(item);
+            });
+
+            const completedCount = completedRecords.length;
+            document.getElementById('statsDisplay').textContent = `${completedCount} / ${syllables.length} selesai`;
+        }
+
+        function startTimer() {
+            seconds = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                seconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function showSyllable() {
+            if (currentIndex < syllables.length) {
+                document.getElementById('syllableDisplay').textContent = syllables[currentIndex];
+                const isCompleted = completedRecords.some(record => record.syllable === syllables[currentIndex]);
+                document.getElementById('markCompleteBtn').disabled = isCompleted;
+            }
+        }
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            currentIndex = 0;
+            showSyllable();
+            startTimer();
+            document.getElementById('startBtn').disabled = true;
+            const isCompleted = completedRecords.some(record => record.syllable === syllables[currentIndex]);
+            document.getElementById('markCompleteBtn').disabled = isCompleted;
+        });
+
+        // Shuffle array function
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Initialize drag and drop activity
+        function initDragDropActivity() {
+            shuffledWords = shuffleArray(targetWords);
+            currentWordIndex = 0;
+            loadNextWord();
+        }
+
+        function loadNextWord() {
+            if (currentWordIndex >= shuffledWords.length) {
+                // All words completed
+                document.getElementById('targetWord').innerHTML = '🎉 TAHNIAH! 🎉';
+                document.getElementById('dropZoneContainer').innerHTML = '<p style="margin: 0; font-size: 2rem; color: #10B981; font-weight: bold;">Anda telah berjaya menyusun semua perkataan!</p>';
+                document.getElementById('syllableBank').innerHTML = '';
+                document.getElementById('checkAnswerBtn').disabled = true;
+                document.getElementById('resetDragBtn').disabled = true;
+                return;
+            }
+
+            const currentWord = shuffledWords[currentWordIndex];
+            document.getElementById('targetWord').textContent = currentWord.word;
+            
+            // Reset drop zone container - create individual boxes
+            const dropZoneContainer = document.getElementById('dropZoneContainer');
+            dropZoneContainer.innerHTML = '';
+            droppedSyllables = [];
+            
+            // Create individual drop boxes for each syllable position
+            currentWord.syllables.forEach((_, index) => {
+                const dropBox = document.createElement('div');
+                dropBox.className = 'individual-drop-box';
+                dropBox.dataset.position = index;
+                dropBox.style.cssText = 'min-width: 150px; min-height: 120px; border: 4px dashed #764ba2; border-radius: 1rem; padding: 1rem; display: flex; align-items: center; justify-content: center; background: rgba(118, 75, 162, 0.05); transition: all 0.3s ease;';
+                
+                const placeholder = document.createElement('p');
+                placeholder.style.cssText = 'margin: 0; color: #999; font-size: 1rem; text-align: center;';
+                placeholder.textContent = `${index + 1}`;
+                dropBox.appendChild(placeholder);
+                
+                // Add drag and drop events to each box
+                dropBox.addEventListener('dragover', handleBoxDragOver);
+                dropBox.addEventListener('dragleave', handleBoxDragLeave);
+                dropBox.addEventListener('drop', handleBoxDrop);
+                
+                dropZoneContainer.appendChild(dropBox);
+            });
+            
+            // Create shuffled syllables
+            const shuffledSyllables = shuffleArray(currentWord.syllables);
+            const syllableBank = document.getElementById('syllableBank');
+            syllableBank.innerHTML = '';
+            
+            shuffledSyllables.forEach((syl, index) => {
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable';
+                syllableDiv.textContent = syl;
+                syllableDiv.draggable = true;
+                syllableDiv.dataset.syllable = syl;
+                syllableDiv.dataset.index = index;
+                
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                syllableBank.appendChild(syllableDiv);
+            });
+            
+            document.getElementById('checkAnswerBtn').disabled = true;
+            updateDragDropStats();
+        }
+
+        function handleDragStart(e) {
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', e.target.innerHTML);
+            e.dataTransfer.setData('syllable', e.target.dataset.syllable);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        // Handle drag over individual box
+        function handleBoxDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drop-zone-active');
+        }
+
+        // Handle drag leave from box
+        function handleBoxDragLeave(e) {
+            e.currentTarget.classList.remove('drop-zone-active');
+        }
+
+        // Handle drop into individual box
+        function handleBoxDrop(e) {
+            e.preventDefault();
+            const dropBox = e.currentTarget;
+            dropBox.classList.remove('drop-zone-active');
+            
+            // Check if box already has a syllable
+            const existingSyllable = dropBox.querySelector('.draggable-syllable');
+            if (existingSyllable) {
+                return; // Don't allow multiple syllables in one box
+            }
+            
+            const syllable = e.dataTransfer.getData('syllable');
+            const draggedElement = document.querySelector('.dragging');
+            const position = parseInt(dropBox.dataset.position);
+            
+            if (draggedElement && syllable) {
+                // If dragged from another box, clear that box
+                if (draggedElement.classList.contains('syllable-in-zone')) {
+                    const oldPosition = draggedElement.parentElement.dataset.position;
+                    droppedSyllables[oldPosition] = null;
+                }
+                
+                // Remove from bank or old box
+                draggedElement.remove();
+                
+                // Add to this drop box
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable syllable-in-zone';
+                syllableDiv.textContent = syllable;
+                syllableDiv.dataset.syllable = syllable;
+                
+                // Make it draggable
+                syllableDiv.draggable = true;
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                // Clear placeholder if exists
+                const placeholder = dropBox.querySelector('p');
+                if (placeholder) placeholder.remove();
+                
+                dropBox.appendChild(syllableDiv);
+                droppedSyllables[position] = syllable;
+                
+                // Enable check button if all boxes are filled
+                const currentWord = shuffledWords[currentWordIndex];
+                const filledBoxes = droppedSyllables.filter(s => s !== null && s !== undefined).length;
+                if (filledBoxes === currentWord.syllables.length) {
+                    document.getElementById('checkAnswerBtn').disabled = false;
+                }
+            }
+        }
+
+        // Allow dragging back to syllable bank
+        const syllableBank = document.getElementById('syllableBank');
+        
+        syllableBank.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        syllableBank.addEventListener('drop', (e) => {
+            e.preventDefault();
+            
+            const syllable = e.dataTransfer.getData('syllable');
+            const draggedElement = document.querySelector('.dragging');
+            
+            if (draggedElement && syllable && draggedElement.classList.contains('syllable-in-zone')) {
+                const parentBox = draggedElement.parentElement;
+                const position = parseInt(parentBox.dataset.position);
+                
+                // Remove from drop box
+                draggedElement.remove();
+                
+                // Clear from droppedSyllables array
+                droppedSyllables[position] = null;
+                
+                // Add back to bank
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable';
+                syllableDiv.textContent = syllable;
+                syllableDiv.draggable = true;
+                syllableDiv.dataset.syllable = syllable;
+                
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                syllableBank.appendChild(syllableDiv);
+                
+                // Add placeholder back to empty box
+                if (parentBox.children.length === 0) {
+                    const placeholder = document.createElement('p');
+                    placeholder.style.cssText = 'margin: 0; color: #999; font-size: 1rem; text-align: center;';
+                    placeholder.textContent = `${position + 1}`;
+                    parentBox.appendChild(placeholder);
+                }
+                
+                document.getElementById('checkAnswerBtn').disabled = true;
+            }
+        });
+
+        function updateDragDropStats() {
+            const completed = dragDropCompleted.length;
+            document.getElementById('dragDropStats').textContent = `${completed} / ${targetWords.length} selesai`;
+        }
+
+        // Check answer button
+        document.getElementById('checkAnswerBtn').addEventListener('click', () => {
+            const currentWord = shuffledWords[currentWordIndex];
+            const userAnswer = droppedSyllables.filter(s => s !== null && s !== undefined).join('');
+            
+            if (userAnswer === currentWord.word) {
+                // Correct answer
+                const dropZoneContainer = document.getElementById('dropZoneContainer');
+                dropZoneContainer.classList.add('correct-answer');
+                
+                // Show success message
+                const message = document.createElement('div');
+                message.textContent = '✓ BETUL! Bagus!';
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 1.5rem 3rem; border-radius: 1rem; z-index: 1000; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.3);';
+                document.body.appendChild(message);
+                
+                setTimeout(() => {
+                    message.remove();
+                    dropZoneContainer.classList.remove('correct-answer');
+                    
+                    // Mark as completed
+                    if (!dragDropCompleted.includes(currentWord.word)) {
+                        dragDropCompleted.push(currentWord.word);
+                        updateDragDropStats();
+                    }
+                    
+                    // Move to next word
+                    currentWordIndex++;
+                    loadNextWord();
+                }, 1500);
+            } else {
+                // Wrong answer
+                const message = document.createElement('div');
+                message.textContent = '✗ Cuba lagi!';
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #EF4444; color: white; padding: 1.5rem 3rem; border-radius: 1rem; z-index: 1000; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.3);';
+                document.body.appendChild(message);
+                setTimeout(() => message.remove(), 2000);
+            }
+        });
+
+        // Reset button
+        document.getElementById('resetDragBtn').addEventListener('click', () => {
+            loadNextWord();
+        });
+
+        // Initialize Activity 3 (No Guidance)
+        function initDragDropActivity3() {
+            shuffledWords3 = shuffleArray(targetWords);
+            currentWordIndex3 = 0;
+            loadNextWord3();
+        }
+
+        function loadNextWord3() {
+            if (currentWordIndex3 >= shuffledWords3.length) {
+                // All words completed
+                document.getElementById('wordHint3').innerHTML = '🎉 TAHNIAH! 🎉';
+                document.getElementById('dropZoneContainer3').innerHTML = '<p style="margin: 0; font-size: 2rem; color: #10B981; font-weight: bold;">Anda telah berjaya menyusun semua perkataan tanpa panduan!</p>';
+                document.getElementById('syllableBank3').innerHTML = '';
+                document.getElementById('checkAnswerBtn3').disabled = true;
+                document.getElementById('resetDragBtn3').disabled = true;
+                return;
+            }
+
+            const currentWord = shuffledWords3[currentWordIndex3];
+            
+            // Don't show the word - only give a hint
+            document.getElementById('wordHint3').innerHTML = '🤔 Cuba susun suku kata ini menjadi perkataan yang betul';
+            
+            // Reset drop zone container
+            const dropZoneContainer3 = document.getElementById('dropZoneContainer3');
+            dropZoneContainer3.innerHTML = '';
+            droppedSyllables3 = [];
+            
+            // Create individual drop boxes
+            currentWord.syllables.forEach((_, index) => {
+                const dropBox = document.createElement('div');
+                dropBox.className = 'individual-drop-box-3';
+                dropBox.dataset.position = index;
+                dropBox.style.cssText = 'min-width: 150px; min-height: 120px; border: 4px dashed #764ba2; border-radius: 1rem; padding: 1rem; display: flex; align-items: center; justify-content: center; background: rgba(118, 75, 162, 0.05); transition: all 0.3s ease;';
+                
+                const placeholder = document.createElement('p');
+                placeholder.style.cssText = 'margin: 0; color: #999; font-size: 1rem; text-align: center;';
+                placeholder.textContent = `${index + 1}`;
+                dropBox.appendChild(placeholder);
+                
+                dropBox.addEventListener('dragover', handleBoxDragOver3);
+                dropBox.addEventListener('dragleave', handleBoxDragLeave3);
+                dropBox.addEventListener('drop', handleBoxDrop3);
+                
+                dropZoneContainer3.appendChild(dropBox);
+            });
+            
+            // Create shuffled syllables
+            const shuffledSyllables = shuffleArray(currentWord.syllables);
+            const syllableBank3 = document.getElementById('syllableBank3');
+            syllableBank3.innerHTML = '';
+            
+            shuffledSyllables.forEach((syl, index) => {
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable';
+                syllableDiv.textContent = syl;
+                syllableDiv.draggable = true;
+                syllableDiv.dataset.syllable = syl;
+                syllableDiv.dataset.index = index;
+                
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                syllableBank3.appendChild(syllableDiv);
+            });
+            
+            document.getElementById('checkAnswerBtn3').disabled = true;
+            updateDragDropStats3();
+        }
+
+        function handleBoxDragOver3(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drop-zone-active');
+        }
+
+        function handleBoxDragLeave3(e) {
+            e.currentTarget.classList.remove('drop-zone-active');
+        }
+
+        function handleBoxDrop3(e) {
+            e.preventDefault();
+            const dropBox = e.currentTarget;
+            dropBox.classList.remove('drop-zone-active');
+            
+            const existingSyllable = dropBox.querySelector('.draggable-syllable');
+            if (existingSyllable) {
+                return;
+            }
+            
+            const syllable = e.dataTransfer.getData('syllable');
+            const draggedElement = document.querySelector('.dragging');
+            const position = parseInt(dropBox.dataset.position);
+            
+            if (draggedElement && syllable) {
+                if (draggedElement.classList.contains('syllable-in-zone')) {
+                    const oldPosition = draggedElement.parentElement.dataset.position;
+                    droppedSyllables3[oldPosition] = null;
+                }
+                
+                draggedElement.remove();
+                
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable syllable-in-zone';
+                syllableDiv.textContent = syllable;
+                syllableDiv.dataset.syllable = syllable;
+                
+                syllableDiv.draggable = true;
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                const placeholder = dropBox.querySelector('p');
+                if (placeholder) placeholder.remove();
+                
+                dropBox.appendChild(syllableDiv);
+                droppedSyllables3[position] = syllable;
+                
+                const currentWord = shuffledWords3[currentWordIndex3];
+                const filledBoxes = droppedSyllables3.filter(s => s !== null && s !== undefined).length;
+                if (filledBoxes === currentWord.syllables.length) {
+                    document.getElementById('checkAnswerBtn3').disabled = false;
+                }
+            }
+        }
+
+        const syllableBank3 = document.getElementById('syllableBank3');
+        
+        syllableBank3.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        syllableBank3.addEventListener('drop', (e) => {
+            e.preventDefault();
+            
+            const syllable = e.dataTransfer.getData('syllable');
+            const draggedElement = document.querySelector('.dragging');
+            
+            if (draggedElement && syllable && draggedElement.classList.contains('syllable-in-zone')) {
+                const parentBox = draggedElement.parentElement;
+                const position = parseInt(parentBox.dataset.position);
+                
+                draggedElement.remove();
+                droppedSyllables3[position] = null;
+                
+                const syllableDiv = document.createElement('div');
+                syllableDiv.className = 'draggable-syllable';
+                syllableDiv.textContent = syllable;
+                syllableDiv.draggable = true;
+                syllableDiv.dataset.syllable = syllable;
+                
+                syllableDiv.addEventListener('dragstart', handleDragStart);
+                syllableDiv.addEventListener('dragend', handleDragEnd);
+                
+                syllableBank3.appendChild(syllableDiv);
+                
+                if (parentBox.children.length === 0) {
+                    const placeholder = document.createElement('p');
+                    placeholder.style.cssText = 'margin: 0; color: #999; font-size: 1rem; text-align: center;';
+                    placeholder.textContent = `${position + 1}`;
+                    parentBox.appendChild(placeholder);
+                }
+                
+                document.getElementById('checkAnswerBtn3').disabled = true;
+            }
+        });
+
+        function updateDragDropStats3() {
+            const completed = dragDropCompleted3.length;
+            document.getElementById('dragDropStats3').textContent = `${completed} / ${targetWords.length} selesai`;
+        }
+
+        document.getElementById('checkAnswerBtn3').addEventListener('click', () => {
+            const currentWord = shuffledWords3[currentWordIndex3];
+            const userAnswer = droppedSyllables3.filter(s => s !== null && s !== undefined).join('');
+            
+            if (userAnswer === currentWord.word) {
+                const dropZoneContainer3 = document.getElementById('dropZoneContainer3');
+                dropZoneContainer3.classList.add('correct-answer');
+                
+                const message = document.createElement('div');
+                message.textContent = `✓ BETUL! Perkataan: ${currentWord.word}`;
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 1.5rem 3rem; border-radius: 1rem; z-index: 1000; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.3);';
+                document.body.appendChild(message);
+                
+                setTimeout(() => {
+                    message.remove();
+                    dropZoneContainer3.classList.remove('correct-answer');
+                    
+                    if (!dragDropCompleted3.includes(currentWord.word)) {
+                        dragDropCompleted3.push(currentWord.word);
+                        updateDragDropStats3();
+                    }
+                    
+                    currentWordIndex3++;
+                    loadNextWord3();
+                }, 2000);
+            } else {
+                const message = document.createElement('div');
+                message.textContent = '✗ Cuba lagi!';
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #EF4444; color: white; padding: 1.5rem 3rem; border-radius: 1rem; z-index: 1000; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.3);';
+                document.body.appendChild(message);
+                setTimeout(() => message.remove(), 2000);
+            }
+        });
+
+        document.getElementById('resetDragBtn3').addEventListener('click', () => {
+            loadNextWord3();
+        });
+
+        // Switch between activities
+        document.getElementById('selectActivity1Btn').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'none';
+            document.getElementById('practiceCard').style.display = 'block';
+            document.querySelector('.progress-section').style.display = 'block';
+            document.getElementById('dragDropCard').style.display = 'none';
+            document.getElementById('dragDropCard3').style.display = 'none';
+        });
+
+        document.getElementById('selectActivity2Btn').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'none';
+            document.getElementById('practiceCard').style.display = 'none';
+            document.querySelector('.progress-section').style.display = 'none';
+            document.getElementById('dragDropCard').style.display = 'block';
+            document.getElementById('dragDropCard3').style.display = 'none';
+            initDragDropActivity();
+        });
+
+        document.getElementById('selectActivity3Btn').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'none';
+            document.getElementById('practiceCard').style.display = 'none';
+            document.querySelector('.progress-section').style.display = 'none';
+            document.getElementById('dragDropCard').style.display = 'none';
+            document.getElementById('dragDropCard3').style.display = 'block';
+            initDragDropActivity3();
+        });
+
+        document.getElementById('backToSelectionBtn1').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'block';
+            document.getElementById('practiceCard').style.display = 'none';
+            document.querySelector('.progress-section').style.display = 'none';
+        });
+
+        document.getElementById('backToSelectionBtn2').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'block';
+            document.getElementById('dragDropCard').style.display = 'none';
+        });
+
+        document.getElementById('backToSelectionBtn3').addEventListener('click', () => {
+            document.getElementById('selectionCard').style.display = 'block';
+            document.getElementById('dragDropCard3').style.display = 'none';
+        });
+
+        document.getElementById('markCompleteBtn').addEventListener('click', async () => {
+            const currentSyllable = syllables[currentIndex];
+            
+            if (completedRecords.length >= 999) {
+                const message = document.createElement('div');
+                message.textContent = 'Had maksimum 999 rekod telah dicapai.';
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #EF4444; color: white; padding: 1rem 2rem; border-radius: 0.5rem; z-index: 1000;';
+                document.body.appendChild(message);
+                setTimeout(() => message.remove(), 3000);
+                return;
+            }
+
+            document.getElementById('markCompleteBtn').disabled = true;
+            
+            const result = await window.dataSdk.create({
+                id: `${currentSyllable}-${Date.now()}`,
+                syllable: currentSyllable,
+                completed: true,
+                timestamp: new Date().toISOString()
+            });
+
+            if (!result.isOk) {
+                const message = document.createElement('div');
+                message.textContent = 'Ralat menyimpan data. Sila cuba lagi.';
+                message.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #EF4444; color: white; padding: 1rem 2rem; border-radius: 0.5rem; z-index: 1000;';
+                document.body.appendChild(message);
+                setTimeout(() => message.remove(), 3000);
+                document.getElementById('markCompleteBtn').disabled = false;
+            } else {
+                // Auto advance to next syllable
+                currentIndex++;
+                if (currentIndex < syllables.length) {
+                    const syllableDisplay = document.getElementById('syllableDisplay');
+                    syllableDisplay.classList.add('pulse');
+                    setTimeout(() => syllableDisplay.classList.remove('pulse'), 500);
+                    showSyllable();
+                } else {
+                    stopTimer();
+                    const syllableDisplay = document.getElementById('syllableDisplay');
+                    syllableDisplay.className = 'syllable-display celebration';
+                    syllableDisplay.innerHTML = '🎉 HEBAT! TAHNIAH! 🎉<br><span style="font-size: 0.6em;">�� Anda Berjaya Menguasai Semua Suku Kata! ✨</span>';
+                    document.getElementById('markCompleteBtn').disabled = true;
+                    document.getElementById('startBtn').disabled = false;
+                }
+            }
+        });
+
+
+
+        async function initialize() {
+            const initResult = await window.dataSdk.init(dataHandler);
+            if (!initResult.isOk) {
+                console.error('Failed to initialize data SDK');
+                return;
+            }
+
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange,
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.background_color || defaultConfig.background_color,
+                                set: (value) => {
+                                    config.background_color = value;
+                                    window.elementSdk.setConfig({ background_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.card_color || defaultConfig.card_color,
+                                set: (value) => {
+                                    config.card_color = value;
+                                    window.elementSdk.setConfig({ card_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.text_color || defaultConfig.text_color,
+                                set: (value) => {
+                                    config.text_color = value;
+                                    window.elementSdk.setConfig({ text_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.primary_button_color || defaultConfig.primary_button_color,
+                                set: (value) => {
+                                    config.primary_button_color = value;
+                                    window.elementSdk.setConfig({ primary_button_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.syllable_color || defaultConfig.syllable_color,
+                                set: (value) => {
+                                    config.syllable_color = value;
+                                    window.elementSdk.setConfig({ syllable_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || defaultConfig.font_family,
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || defaultConfig.font_size,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["main_title", config.main_title || defaultConfig.main_title],
+                        ["student_name", config.student_name || defaultConfig.student_name],
+                        ["school_name", config.school_name || defaultConfig.school_name],
+                        ["instruction_text", config.instruction_text || defaultConfig.instruction_text],
+                        ["start_button_text", config.start_button_text || defaultConfig.start_button_text],
+                        ["mark_complete_text", config.mark_complete_text || defaultConfig.mark_complete_text]
+                    ])
+                });
+
+                await onConfigChange(window.elementSdk.config);
+            } else {
+                await onConfigChange(defaultConfig);
+            }
+
+            isInitialized = true;
+        }
+
+        initialize();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a81c89ef12f3cd8',t:'MTc2NDc1MTQ4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
